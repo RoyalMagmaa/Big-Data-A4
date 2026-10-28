@@ -1,13 +1,11 @@
 -- =====================================================================
--- Script principal : crée toute la base en appelant chaque fichier.
+-- CRÉATION D'UNE BASE NEUVE (vide)
 --
--- Lancement (depuis un terminal) :
---   psql -U <utilisateur> -d <base> -f main.sql
+--   /!\ NE PAS LANCER sur une base qui contient déjà des données :
+--       00_drop_all.sql supprime tout. Pour une base existante,
+--       utiliser migrate.sql à la place.
 --
--- \ir = "include relative" : chemin relatif à l'emplacement de main.sql,
--- donc le script marche quel que soit le dossier d'où tu lances psql.
--- ON_ERROR_STOP : arrête tout à la première erreur au lieu de continuer.
--- BEGIN / COMMIT : tout ou rien. Si un fichier échoue, rien n'est créé.
+-- Lancement :  psql -U <utilisateur> -d <base> -f main.sql
 -- =====================================================================
 
 \set ON_ERROR_STOP on
@@ -30,5 +28,11 @@ BEGIN;
 \ir tables/12_adher.sql
 \ir tables/13_activite_professionnel_sante.sql
 \ir tables/14_hospitalisation.sql
+
+-- Table de suivi des migrations (voir migrate.sql).
+-- Une base neuve a déjà le schéma final : on note donc la migration
+-- comme déjà appliquée, pour que migrate.sql ne la rejoue pas.
+\ir schema_migrations.sql
+INSERT INTO schema_migrations (version) VALUES ('2023_alignement');
 
 COMMIT;

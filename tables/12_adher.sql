@@ -1,13 +1,11 @@
 -- Table : Adher
--- TABLE D'ASSOCIATION (N-N) entre Patient et Mutuelle :
--- un patient peut adhérer à plusieurs mutuelles et inversement.
-CREATE TABLE Adher (
-    Id_patient  INTEGER NOT NULL,
-    Id_mut      INTEGER NOT NULL,
-    CONSTRAINT pk_adher
-        PRIMARY KEY (Id_patient, Id_mut),
-    CONSTRAINT fk_adher_patient
-        FOREIGN KEY (Id_patient) REFERENCES Patient (Id_patient),
-    CONSTRAINT fk_adher_mutuelle
-        FOREIGN KEY (Id_mut)     REFERENCES Mutuelle (Id_Mut)
+-- Table d'association N-N entre Patient et Mutuelle.
+CREATE TABLE "Adher" (
+    "Id_patient"  INTEGER,
+    "Id_mut"      INTEGER,
+    CONSTRAINT "Adher_pkey" PRIMARY KEY ("Id_patient", "Id_mut"),
+    CONSTRAINT "Adher_Id_patient_fkey"
+        FOREIGN KEY ("Id_patient") REFERENCES "Patient" ("Id_patient"),
+    CONSTRAINT "Adher_Id_mut_fkey"
+        FOREIGN KEY ("Id_mut")     REFERENCES "Mutuelle" ("Id_Mut")
 );
