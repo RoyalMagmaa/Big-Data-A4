@@ -9,6 +9,18 @@
 --   "Taille" : texte entier ("175") -> INTEGER.
 --   "Code_postal" reste du texte (VARCHAR(5)) pour garder le 0 initial.
 --
+-- Garde-fou : si une date n'est pas au format mois/jour/année, to_date pourrait
+-- la mal lire sans prévenir. On vérifie avant, et on arrête tout si besoin.
+DO $$
+DECLARE nb INTEGER;
+BEGIN
+    SELECT count(*) INTO nb FROM "Patient"
+    WHERE "Date" IS NOT NULL AND "Date" !~ '^\d{1,2}/\d{1,2}/\d{4}$';
+    IF nb > 0 THEN
+        RAISE EXCEPTION '% patient(s) ont une "Date" qui n est pas au format MM/JJ/AAAA. Corrige-les avant de relancer.', nb;
+    END IF;
+END $$;
+
 -- Tout est dans UN SEUL ALTER TABLE : PostgreSQL ne réécrit la table qu'une fois.
 ALTER TABLE "Patient"
     ALTER COLUMN "Date"        TYPE DATE         USING to_date("Date", 'MM/DD/YYYY'),
